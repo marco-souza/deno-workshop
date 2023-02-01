@@ -13,6 +13,14 @@ export const handler: Handler<Data> = {
     const url = new URL(req.url);
     const prompt = url.searchParams.get("prompt") ?? "";
 
+    if (prompt.trim() === "") { 
+      return ctx.render({
+        prompt,
+        result: "",
+        error: "",
+      });
+    }
+
     try {
       const res = await fetchOpenAICompletion(prompt);
       return ctx.render({

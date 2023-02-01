@@ -1,22 +1,24 @@
 import "env-loader"
-import { Configuration, OpenAIApi } from "npm:openai";
-
-const configuration = new Configuration({
-  apiKey: Deno.env.get("OPENAI_API_KEY"),
-});
-
-const openai = new OpenAIApi(configuration);
 
 export async function fetchOpenAICompletion(prompt: string) {
-  const response = await openai.createCompletion({
-    prompt,
-    model: "text-davinci-003",
-    temperature: 0,
-    max_tokens: 300,
-    top_p: 1.0,
-    frequency_penalty: 0.0,
-    presence_penalty: 0.0,
+  const url = "https://api.openai.com/v1/engines/davinci/completions";
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${Deno.env.get("OPENAI_API_KEY")}`,
+    },
+    body: JSON.stringify({
+      prompt,
+      max_tokens: 300,
+      temperature: 0,
+      top_p: 1.0,
+      frequency_penalty: 0.0,
+      presence_penalty: 0.0,
+    }),
   });
 
-  return response.data.choices[0].text;
+  const data = await res.json();
+  console.log(data)
+  return data.choices[0].text;
 }
