@@ -62,7 +62,9 @@ export default function Home({ data }: PageProps<Data>) {
         <p>Resposta:</p>
 
         <div class="mt-4">
-          {result}
+          {result.split("\n").map((line) => (
+            <p>{line}</p>
+          ))}
         </div>
 
         <p class="mt-4">
